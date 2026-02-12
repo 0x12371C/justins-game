@@ -8,6 +8,33 @@ Use this document when two agents collaborate on this repository.
 - After every new commit, perform a handshake.
 - Receiving agent must verify before any new coding begins.
 
+## Branch and PR Model
+
+- Do not commit directly to `main` during normal feature work.
+- Create one branch per task:
+  - Example: `feature/fishing-ui`, `feature/inventory-flow`
+- Open PR from feature branch into `main`.
+- Require review before merge.
+- After merge, both collaborators sync `main` before next task.
+
+### Minimal Commands
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/my-task
+git add .
+git commit -m "Implement my task"
+git push -u origin feature/my-task
+```
+
+After PR merge:
+
+```bash
+git checkout main
+git pull origin main
+```
+
 ## Required Skill Context To Share
 
 Always include these project-relevant skills in each handoff:
