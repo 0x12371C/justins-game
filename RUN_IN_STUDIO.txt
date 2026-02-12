@@ -3,18 +3,24 @@
 Repo:
 - https://github.com/0x12371C/justins-game
 
-1) Prepare local environment (branch + sync + Rojo check)
+1) One-command workflow (recommended)
    cd C:\Users\Josh\OneDrive\Desktop\frontiergame
+   powershell -ExecutionPolicy Bypass -File .\scripts\start-studio-workflow.ps1 -Branch main
+
+2) Setup-only mode (no Studio auto-launch, no Rojo serve window)
+   powershell -ExecutionPolicy Bypass -File .\scripts\start-studio-workflow.ps1 -Branch main -SkipRojoServe -SkipStudioLaunch
+
+3) Manual setup path (if needed)
    powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev-env.ps1 -Branch main
 
-2) Start Rojo
+4) Start Rojo manually (only needed if you did setup-only mode)
    rojo serve
 
-3) Open Roblox Studio + Rojo plugin
+5) Open Roblox Studio + Rojo plugin
    - Connect to localhost:34872
    - Open project: C:\Users\Josh\OneDrive\Desktop\frontiergame\default.project.json
 
-4) Play test
+6) Play test
    - Currency HUD script: src\client\FrontierCurrencyUi.client.lua
    - Fishing UI script: src\client\FishingUi.client.lua
    - Fishing inventory bootstrap: src\server\FishingInventory.server.lua
