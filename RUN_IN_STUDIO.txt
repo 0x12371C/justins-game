@@ -1,57 +1,43 @@
-Rojo setup (recommended):
+﻿GitHub + Studio quick start (new main repo):
 
-1) In a terminal:
+Repo:
+- https://github.com/0x12371C/justins-game
+
+1) Prepare local environment (branch + sync + Rojo check)
    cd C:\Users\Josh\OneDrive\Desktop\frontiergame
+   powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev-env.ps1 -Branch main
+
+2) Start Rojo
    rojo serve
 
-2) Open Roblox Studio.
+3) Open Roblox Studio + Rojo plugin
+   - Connect to localhost:34872
+   - Open project: C:\Users\Josh\OneDrive\Desktop\frontiergame\default.project.json
 
-3) Install/open the Rojo plugin in Studio.
-   - In Rojo plugin: Connect to localhost:34872
-   - Open this project file:
-     C:\Users\Josh\OneDrive\Desktop\frontiergame\default.project.json
+4) Play test
+   - Currency HUD script: src\client\FrontierCurrencyUi.client.lua
+   - Fishing UI script: src\client\FishingUi.client.lua
+   - Fishing inventory bootstrap: src\server\FishingInventory.server.lua
 
-4) Press Play.
-   - The UI script syncs from:
-     src\client\FrontierCurrencyUi.client.lua
-   - It appears because the script creates a ScreenGui in PlayerGui.
+Collab branch workflow:
+- Create branch:
+  git checkout -b feature/my-task
+- Push branch:
+  git push -u origin feature/my-task
+- Open PR into main and merge after review.
+- After merge, both sync:
+  git checkout main
+  git pull origin main
 
-Asset ID automation (future-proof workflow):
-1) Import images in Studio Asset Manager (Images).
-2) Copy the Image IDs.
-3) Run one command:
-   powershell -ExecutionPolicy Bypass -File .\scripts\sync-ui-asset-ids.ps1 `
-     -TopTooltip <id> `
-     -BottomTooltip <id> `
-     -EmeraldIcon <id> `
-     -PurpleGemIcon <id>
-4) The command updates:
-   - assets\ui-asset-ids.json
-   - src\client\FrontierCurrencyUi.client.lua
-   - FrontierCurrencyUi.client.lua
-5) Next time, to re-apply saved IDs only:
-   powershell -ExecutionPolicy Bypass -File .\scripts\sync-ui-asset-ids.ps1 -FromManifestOnly
+Fishing UI behavior (current):
+- UI only appears when a fishing pole is equipped and activated.
+- Tool is identified by:
+  - Tool attribute IsFishingPole = true (preferred), or
+  - Name containing fish + pole/rod.
 
-Fully automated upload + wire (no manual ID copying):
-1) Make sure Roblox Studio is signed in on this machine.
-2) Run uploader (auto uses Studio auth cookie if Open Cloud key is not set):
-   powershell -ExecutionPolicy Bypass -File .\scripts\upload-and-wire-ui-assets.ps1 `
-     -CreatorType user `
-     -TopTooltipPath <path_to_teal_tooltip_png> `
-     -BottomTooltipPath <path_to_purple_tooltip_png>
-3) Optional: if you want Open Cloud mode instead, set key first:
-   $env:ROBLOX_OPEN_CLOUD_API_KEY = "<your_key>"
-4) The script uploads images to Roblox, polls for final IDs, then runs sync-ui-asset-ids.ps1 automatically.
-5) Stop/Play in Studio to refresh.
+Inventory behavior (current):
+- Backpack CoreGui is forced on by src\client\CoreGuiBackpack.client.lua
+- Players get a Fishing Pole from src\server\FishingInventory.server.lua
 
-Quick tune points (in src\client\FrontierCurrencyUi.client.lua):
-- Asset IDs block is near top in `ASSET_IDS`:
-  - topTooltip
-  - bottomTooltip
-  - emeraldIcon
-  - purpleGemIcon
-- You can paste either raw numeric IDs or full `rbxassetid://...`.
-- Screen position: `hudStack.Position`
-- Bar sizing: `holder.Size`, `panel.Size`, `plusButton.Size`
-- Text size: `amount.TextSize`
-- Color tuning: `accentColor`, `iconBaseColor`, `textColor` in each `createCurrencyBar(...)` config
+Required docking protocol:
+- Follow DOCKING_HANDSHAKE.md after every commit.
