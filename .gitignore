@@ -1,0 +1,13 @@
+# Rojo generated
+sourcemap.json
+
+# Roblox Studio locks / temp
+*.rbxl.lock
+*.rbxlx.lock
+*.tmp
+*.bak
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/

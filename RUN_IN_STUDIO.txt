@@ -1,0 +1,57 @@
+Rojo setup (recommended):
+
+1) In a terminal:
+   cd C:\Users\Josh\OneDrive\Desktop\frontiergame
+   rojo serve
+
+2) Open Roblox Studio.
+
+3) Install/open the Rojo plugin in Studio.
+   - In Rojo plugin: Connect to localhost:34872
+   - Open this project file:
+     C:\Users\Josh\OneDrive\Desktop\frontiergame\default.project.json
+
+4) Press Play.
+   - The UI script syncs from:
+     src\client\FrontierCurrencyUi.client.lua
+   - It appears because the script creates a ScreenGui in PlayerGui.
+
+Asset ID automation (future-proof workflow):
+1) Import images in Studio Asset Manager (Images).
+2) Copy the Image IDs.
+3) Run one command:
+   powershell -ExecutionPolicy Bypass -File .\scripts\sync-ui-asset-ids.ps1 `
+     -TopTooltip <id> `
+     -BottomTooltip <id> `
+     -EmeraldIcon <id> `
+     -PurpleGemIcon <id>
+4) The command updates:
+   - assets\ui-asset-ids.json
+   - src\client\FrontierCurrencyUi.client.lua
+   - FrontierCurrencyUi.client.lua
+5) Next time, to re-apply saved IDs only:
+   powershell -ExecutionPolicy Bypass -File .\scripts\sync-ui-asset-ids.ps1 -FromManifestOnly
+
+Fully automated upload + wire (no manual ID copying):
+1) Make sure Roblox Studio is signed in on this machine.
+2) Run uploader (auto uses Studio auth cookie if Open Cloud key is not set):
+   powershell -ExecutionPolicy Bypass -File .\scripts\upload-and-wire-ui-assets.ps1 `
+     -CreatorType user `
+     -TopTooltipPath <path_to_teal_tooltip_png> `
+     -BottomTooltipPath <path_to_purple_tooltip_png>
+3) Optional: if you want Open Cloud mode instead, set key first:
+   $env:ROBLOX_OPEN_CLOUD_API_KEY = "<your_key>"
+4) The script uploads images to Roblox, polls for final IDs, then runs sync-ui-asset-ids.ps1 automatically.
+5) Stop/Play in Studio to refresh.
+
+Quick tune points (in src\client\FrontierCurrencyUi.client.lua):
+- Asset IDs block is near top in `ASSET_IDS`:
+  - topTooltip
+  - bottomTooltip
+  - emeraldIcon
+  - purpleGemIcon
+- You can paste either raw numeric IDs or full `rbxassetid://...`.
+- Screen position: `hudStack.Position`
+- Bar sizing: `holder.Size`, `panel.Size`, `plusButton.Size`
+- Text size: `amount.TextSize`
+- Color tuning: `accentColor`, `iconBaseColor`, `textColor` in each `createCurrencyBar(...)` config
